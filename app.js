@@ -98,7 +98,9 @@ app.get('/user', function(req, res) {
     }
 });
 
-
-
+// Обработчик для всех несуществующих маршрутов (404)
+app.use(function(req, res, next) {
+    res.status(404).sendFile(path.join(__dirname, 'public', 'pages/404.html'));
+});
 
 module.exports = app;

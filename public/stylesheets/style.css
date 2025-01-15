@@ -5,6 +5,65 @@
     font-family: Arial, sans-serif; /* Устанавливает шрифт по умолчанию */
 }
 
+#holidays-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Расстояние между элементами */
+    justify-content: center; /* Центрирование элементов */
+    padding: 20px;
+}
+
+.category-item {
+    flex: 1 1 calc(33.333% - 20px); /* Устанавливаем ширину одной трети контейнера */
+    box-sizing: border-box;
+    margin: 10px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.category-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 10px 20px;
+    background-color: #ffd700; /* Зеленый цвет, чтобы соответствовать теме */
+    color: white; /* Белый текст */
+    border: 2px solid #ffd700; /* Рамка того же цвета, что и фон */
+    border-radius: 25px; /* Закругленные края */
+    font-size: 16px; /* Увеличенный размер текста */
+    font-weight: bold; /* Жирный текст */
+    cursor: pointer; /* Указатель мыши */
+    transition: all 0.3s ease; /* Плавные изменения при наведении */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Легкая тень */
+}
+
+.pagination button:hover {
+    background-color: white; /* Белый фон при наведении */
+    color: #ffd700; /* Зеленый текст при наведении */
+    border: 2px solid #ffd700; /* Подчеркнутый эффект рамки */
+}
+
+.pagination button:active {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Уменьшенная тень при нажатии */
+    transform: translateY(2px); /* Эффект нажатия */
+}
+
+
+
 .navbar .logo {
     text-decoration: none; /* Убирает подчеркивание у логотипа */
 }

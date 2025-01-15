@@ -62,14 +62,36 @@
   getUserData();
 
   // Функция для получения данных о праздниках с сервера
-  async function fetchHolidays() {
-    const response = await fetch('/holidays');
-    const html = await response.text();
-    // Отображаем полученные данные в контейнере
-    document.getElementById('holidays-container').innerHTML = html;
+  let currentPage = 1;
+
+  async function fetchHolidays(page = 1) {
+    const response = await fetch(`/holidays?page=${page}&limit=10`);
+    const data = await response.json();
+
+    const holidaysContainer = document.getElementById('holidays-container');
+    holidaysContainer.innerHTML = data.holidays.map(holiday => `
+        <div class="category-item" onclick="showHolidayDetails(${holiday.id})">
+            <h2>${holiday.title}</h2>
+            ${holiday.images.length > 0 ?
+            `<img class="category-image" src="${holiday.images[0]}" alt="${holiday.title}">` :
+            `<img class="category-image" src="./images/default-image.png" alt="${holiday.title}">`
+    }
+        </div>
+    `).join('');
+
+    // Добавление кнопок пагинации
+    const pagination = `
+        <div class="pagination">
+            ${page > 1 ? `<button onclick="fetchHolidays(${page - 1})">Предыдущая</button>` : ''}
+            ${page < data.pages ? `<button onclick="fetchHolidays(${page + 1})">Следующая</button>` : ''}
+        </div>
+    `;
+    holidaysContainer.innerHTML += pagination;
   }
-  // Вызов функции для загрузки праздников
+
+  // Вызов функции для начальной загрузки
   fetchHolidays();
+
 
   // Обработчик клика на элемент с праздником
   function showHolidayDetails(holidayId) {

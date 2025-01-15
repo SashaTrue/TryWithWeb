@@ -9,9 +9,11 @@
 <body>
 <nav class="navbar">
   <a href="/" class="logo">
-    <img src="../images/logo/SaintChel.png" alt="Holy Days Icon">
+    <img src="./images/logo/SaintChel.png" alt="Holy Days Icon">
     <span>Holy Days</span>
   </a>
+  <!-- Кнопка входа через GitHub или кнопка с никнеймом -->
+  <a id="auth-btn" href="/auth/github" class="github-login-btn">Войти через GitHub</a>
 </nav>
 
 <div class="nav-container">
@@ -22,14 +24,36 @@
 </div>
 
 <div id="holidays-container"></div>
+
 <script>
-  // Получение данных с сервера
+  // Функция для получения данных о текущем пользователе
+  async function getUserData() {
+    const response = await fetch('/user');
+    const data = await response.json();
+
+    const authBtn = document.getElementById('auth-btn');
+    if (data.username) {
+      // Меняем кнопку на никнейм и аватарку
+      authBtn.innerHTML = `
+        <img src="${data.avatar_url}" alt="Avatar" class="avatar">
+        ${data.username} (Выход)
+      `;
+      authBtn.href = '/logout'; // Меняем ссылку на выход
+    } else {
+      authBtn.textContent = 'Войти через GitHub'; // Если не авторизован
+      authBtn.href = '/auth/github'; // Ссылка на вход
+    }
+  }
+
+  // Вызов функции при загрузке страницы
+  getUserData();
+
+  // Получение данных с сервера о праздниках
   async function fetchHolidays() {
     const response = await fetch('/holidays');
     const html = await response.text();
     document.getElementById('holidays-container').innerHTML = html;
   }
-  // Загрузка при открытии страницы
   fetchHolidays();
 
   // Обработчик клика на мероприятие
@@ -37,12 +61,5 @@
     window.location.href = `/holiday-details?id=${holidayId}`; // Перенаправление на страницу с параметром ID
   }
 </script>
-<p>
-  <a href="http://jigsaw.w3.org/css-validator/check/referer">
-    <img style="border:0;width:88px;height:31px"
-         src="http://jigsaw.w3.org/css-validator/images/vcss"
-         alt="Правильный CSS!" />
-  </a>
-</p>
 </body>
 </html>

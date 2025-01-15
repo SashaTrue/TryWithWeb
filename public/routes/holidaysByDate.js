@@ -64,6 +64,8 @@ router.get('/', async (req, res) => {
     <img src="../images/logo/SaintChel.png" alt="Holy Days Icon">
     <span>Holy Days</span>
   </a>
+  <!-- Кнопка входа через GitHub или кнопка с никнеймом -->
+  <a id="auth-btn" href="/auth/github" class="github-login-btn">Войти через GitHub</a>
 </nav>
 
 <div class="nav-container">
@@ -100,11 +102,8 @@ router.get('/', async (req, res) => {
 
         html += `
         </div>
-        <script>
-          // Обработчик клика на мероприятие
-          function showHolidayDetails(holidayId) {
-              window.location.href = \`/holiday-details?id=\${holidayId}\`;
-          }
+        <script src="../javascripts/updateAuthButton.js">
+          
         </script>
       </body>
       </html>

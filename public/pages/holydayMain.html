@@ -24,6 +24,8 @@
       }
     }
   </style>
+  <!-- Подключение общего скрипта -->
+  <script src="../scripts/updateAuthButton.js"></script>
 </head>
 <body>
 <nav class="navbar">
@@ -31,6 +33,8 @@
     <img src="../images/logo/SaintChel.png" alt="Holy Days Icon">
     <span>Holy Days</span>
   </a>
+  <!-- Кнопка входа через GitHub или кнопка с никнеймом -->
+  <a id="auth-btn" href="/auth/github" class="github-login-btn">Войти через GitHub</a>
 </nav>
 
 <div class="nav-container">
@@ -72,7 +76,7 @@
   </div>
 </main>
 
-<script>
+<script src="../javascripts/updateAuthButton.js">
   function initializeSlider() {
     const sliderImages = document.getElementById('sliderImages');
     const images = sliderImages.querySelectorAll('img');

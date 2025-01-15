@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Holy Days - Описание праздника</title>
+  <link rel="stylesheet" href="../stylesheets/style.css">
+  <style>
+    /* Медиа-запрос для мобильных устройств */
+    @media screen and (max-width: 768px) {
+      .content-wrapper {
+        flex-direction: column;
+      }
+
+      .image-slider,
+      .holiday-info {
+        width: 100%;
+      }
+      .holiday-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="/" class="logo">
+    <img src="../images/logo/SaintChel.png" alt="Holy Days Icon">
+    <span>Holy Days</span>
+  </a>
+</nav>
+
+<div class="nav-container">
+  <div class="nav-links">
+    <a href="/holidays-by-date">По дате</a>
+    <a href="/holidays-by-category">По категориям</a>
+  </div>
+</div>
+
+<main class="holiday-container">
+  <div class="image-slider">
+    <div class="slider-images" id="sliderImages"></div>
+    <button class="slider-arrow left">←</button>
+    <button class="slider-arrow right">→</button>
+  </div>
+
+  <div class="holiday-info">
+    <h1 class="holiday-title" id="holidayTitle">{{holidayTitle}}</h1>
+    <p class="category" id="holidayCategory">{{holidayCategory}}</p>
+    <div class="holiday-description" id="holidayDescription">{{holidayDescription}}</div>
+  </div>
+
+  <div class="additional-info">
+    <h2>Дополнительная информация</h2>
+    <div class="info-grid">
+      <div class="info-item">
+        <h3>Традиции</h3>
+        <p id="holidayTraditional">{{holidayTraditional}}</p>
+      </div>
+      <div class="info-item">
+        <h3>Дата празднования</h3>
+        <p id="holidayDate">{{holidayDate}}</p>
+      </div>
+      <div class="info-item">
+        <h3>Интересные факты</h3>
+        <p id="holidayFact">{{holidayFact}}</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  function initializeSlider() {
+    const sliderImages = document.getElementById('sliderImages');
+    const images = sliderImages.querySelectorAll('img');
+    let currentImage = 0;
+
+    images.forEach(image => {
+      const src = typeof image === 'object' ? image.url : image;
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = 'Holiday Image';
+      img.style.width = '100%';
+      img.style.flexShrink = '0';
+      sliderImages.appendChild(img);
+    });
+
+
+    // Настраиваем стили контейнера
+    sliderImages.style.display = 'flex';
+    sliderImages.style.transition = 'transform 0.3s ease';
+
+    // Обновляем вид слайдера
+    function updateSlider() {
+      sliderImages.style.transform = `translateX(-${currentImage * 100}%)`;
+    }
+
+    // Обработчики для стрелок
+    document.querySelector('.slider-arrow.left').addEventListener('click', () => {
+      currentImage = (currentImage - 1 + images.length) % images.length;
+      updateSlider();
+    });
+
+    document.querySelector('.slider-arrow.right').addEventListener('click', () => {
+      currentImage = (currentImage + 1) % images.length;
+      updateSlider();
+    });
+  }
+
+  // Инициализация слайдера
+  document.addEventListener('DOMContentLoaded', initializeSlider);
+</script>
+</body>
+</html>

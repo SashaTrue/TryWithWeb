@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Holy Days - главная</title>
+  <link rel="stylesheet" href="./stylesheets/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <a href="/" class="logo">
+    <img src="../images/logo/SaintChel.png" alt="Holy Days Icon">
+    <span>Holy Days</span>
+  </a>
+</nav>
+
+<div class="nav-container">
+  <div class="nav-links">
+    <a href="/holidays-by-date">По дате</a>
+    <a href="/holidays-by-category">По категориям</a>
+  </div>
+</div>
+
+<div id="holidays-container"></div>
+<script>
+  // Получение данных с сервера
+  async function fetchHolidays() {
+    const response = await fetch('/holidays');
+    const html = await response.text();
+    document.getElementById('holidays-container').innerHTML = html;
+  }
+  // Загрузка при открытии страницы
+  fetchHolidays();
+
+  // Обработчик клика на мероприятие
+  function showHolidayDetails(holidayId) {
+    window.location.href = `/holiday-details?id=${holidayId}`; // Перенаправление на страницу с параметром ID
+  }
+</script>
+<p>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer">
+    <img style="border:0;width:88px;height:31px"
+         src="http://jigsaw.w3.org/css-validator/images/vcss"
+         alt="Правильный CSS!" />
+  </a>
+</p>
+</body>
+</html>

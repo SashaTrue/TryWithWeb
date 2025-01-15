@@ -5,6 +5,7 @@ const { Pool } = require('pg');
 
 require('dotenv').config();
 
+// Инициализация пула подключений к базе данных PostgreSQL
 const pool = new Pool({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
@@ -13,8 +14,10 @@ const pool = new Pool({
     port: process.env.DB_PORT,
 });
 
+// Обработчик GET-запроса на путь '/'
 router.get('/', async (req, res) => {
     try {
+        // SQL-запрос для получения праздников с изображениями
         const query = `
             SELECT h.id, h.title, h.description, h.category,
                    h.celebration_date,
@@ -24,12 +27,12 @@ router.get('/', async (req, res) => {
             GROUP BY h.id
             ORDER BY h.category, h.celebration_date;
         `;
-        const result = await pool.query(query);
+        const result = await pool.query(query);  // Выполнение запроса
 
-        // Группировка по категориям
+        // Группировка праздников по категориям
         const holidaysByCategory = result.rows.reduce((acc, holiday) => {
-            const category = holiday.category || 'Без категории';
-            if (!acc[category]) acc[category] = [];
+            const category = holiday.category || 'Без категории';  // Категория или 'Без категории'
+            if (!acc[category]) acc[category] = [];  // Если категории нет, создаем массив
             acc[category].push({
                 id: holiday.id,
                 title: holiday.title,
@@ -40,7 +43,7 @@ router.get('/', async (req, res) => {
             return acc;
         }, {});
 
-        // Генерация HTML
+        // Генерация HTML-кода страницы
         let html = `
             <!DOCTYPE html>
 <html lang="ru">
@@ -48,6 +51,7 @@ router.get('/', async (req, res) => {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Holy Days - По категориям</title>
+  <link rel="icon" href="../favicon.svg" type="image/x-icon">
   <link rel="stylesheet" href="../stylesheets/style.css">
 </head>
 <body>
@@ -69,6 +73,7 @@ router.get('/', async (req, res) => {
 
 <div class="content">`;
 
+        // Проход по категориям и генерация HTML для каждой категории
         Object.keys(holidaysByCategory).forEach(category => {
             html += `
                 <div class="categories">
@@ -96,8 +101,8 @@ router.get('/', async (req, res) => {
 
         html += `
         </div>
-        <script src="../javascripts/updateAuthButton.js">
-          // Обработчик клика на мероприятие
+        <script src="../javascripts/common.js">
+          // Обработчик клика на мероприятие, переход к подробностям
           function showHolidayDetails(holidayId) {
               window.location.href = \`/holiday-details?id=\${holidayId}\`;
           }
@@ -106,9 +111,10 @@ router.get('/', async (req, res) => {
       </html>
         `;
 
-        // Отправка готового HTML
+        // Отправка готового HTML-кода клиенту
         res.send(html);
     } catch (error) {
+        // Обработка ошибок
         console.error('Ошибка при формировании HTML:', error);
         res.status(500).send('Ошибка сервера');
     }

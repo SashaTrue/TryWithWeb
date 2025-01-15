@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { Pool } = require('pg');
 
+// Загрузка переменных окружения из .env файла
 require('dotenv').config();
 
+// Создание подключения к базе данных PostgreSQL с использованием переменных окружения
 const pool = new Pool({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
@@ -12,14 +14,17 @@ const pool = new Pool({
     port: process.env.DB_PORT,
 });
 
+// Массив с названиями месяцев для использования в группировке праздников
 const MONTHS = [
     'Январь', 'Февраль', 'Март', 'Апрель',
     'Май', 'Июнь', 'Июль', 'Август',
     'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
 ];
 
+// Маршрут для получения списка праздников
 router.get('/', async (req, res) => {
     try {
+        // SQL запрос для получения праздников с изображениями, если они есть
         const query = `
             SELECT h.id, h.title, h.description, h.category,
                    h.celebration_date,
@@ -29,13 +34,13 @@ router.get('/', async (req, res) => {
             GROUP BY h.id
             ORDER BY celebration_date;
         `;
-        const result = await pool.query(query);
+        const result = await pool.query(query); // Выполнение запроса к базе данных
 
-        // Группировка по месяцам
+        // Группировка праздников по месяцам
         const holidaysByMonth = result.rows.reduce((acc, holiday) => {
             const monthIndex = new Date(holiday.celebration_date).getMonth();
             const monthName = MONTHS[monthIndex];
-            if (!acc[monthName]) acc[monthName] = [];
+            if (!acc[monthName]) acc[monthName] = []; // Если месяца нет, создаем его
             acc[monthName].push({
                 id: holiday.id,
                 title: holiday.title,
@@ -47,7 +52,7 @@ router.get('/', async (req, res) => {
             return acc;
         }, {});
 
-        // Генерация HTML
+        // Генерация HTML страницы с праздниками
         let html = `
             <!DOCTYPE html>
 <html lang="ru">
@@ -55,6 +60,7 @@ router.get('/', async (req, res) => {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Holy Days - главная</title>
+  <link rel="icon" href="../favicon.svg" type="image/x-icon">
   <link rel="stylesheet" href="../stylesheets/style.css">
 </head>
 <body>
@@ -75,6 +81,7 @@ router.get('/', async (req, res) => {
   </div>
 </div>`;
 
+        // Добавление праздников по месяцам в HTML
         Object.keys(holidaysByMonth).forEach(month => {
             html += `
                 <div class="categories">
@@ -102,19 +109,20 @@ router.get('/', async (req, res) => {
 
         html += `
         </div>
-        <script src="../javascripts/updateAuthButton.js">
+        <script src="../javascripts/common.js">
           
         </script>
       </body>
       </html>
         `;
 
-        // Отправка готового HTML
+        // Отправка готового HTML на клиентскую сторону
         res.send(html);
     } catch (error) {
-        console.error('Ошибка при формировании HTML:', error);
-        res.status(500).send('Ошибка сервера');
+        console.error('Ошибка при формировании HTML:', error); // Логирование ошибок
+        res.status(500).send('Ошибка сервера'); // Отправка сообщения об ошибке
     }
 });
 
+// Экспорт маршрута для использования в основном приложении
 module.exports = router;

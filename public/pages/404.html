@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"> <!-- Устанавливаем кодировку страницы -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Устанавливаем параметры для адаптивности страницы на мобильных устройствах -->
+  <title>Holy Days - Страница не найдена</title> <!-- Заголовок страницы -->
+  <link rel="stylesheet" href="../stylesheets/style.css"> <!-- Подключаем внешний CSS файл -->
+  <link rel="icon" href="../favicon.svg" type="image/x-icon">
+  <style>
+    /* Центрирование контента на странице */
+    body {
+      display: flex; /* Используем flexbox для центрирования */
+      justify-content: center; /* Горизонтальное центрирование */
+      align-items: center; /* Вертикальное центрирование */
+      height: 100vh; /* Высота страницы на весь экран */
+      margin: 0; /* Убираем отступы по умолчанию */
+      font-family: Arial, sans-serif; /* Шрифт для всей страницы */
+      background-color: #f4f4f4; /* Цвет фона страницы */
+    }
+
+    .error-container {
+      text-align: center; /* Выравнивание текста по центру */
+      padding: 20px; /* Отступы внутри контейнера */
+      background-color: white; /* Белый фон контейнера */
+      border-radius: 10px; /* Скругленные углы */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень для контейнера */
+      max-width: 600px; /* Максимальная ширина контейнера */
+      width: 100%; /* Ширина контейнера на всю доступную область */
+    }
+
+    .error-container h1 {
+      font-size: 36px; /* Размер шрифта для заголовка */
+      margin-bottom: 20px; /* Отступ снизу от заголовка */
+    }
+
+    .error-container p {
+      font-size: 18px; /* Размер шрифта для текста */
+      margin-bottom: 20px; /* Отступ снизу от текста */
+    }
+
+    .error-container a {
+      color: #007bff; /* Цвет ссылки */
+      text-decoration: none; /* Убираем подчеркивание у ссылки */
+      font-weight: bold; /* Жирное начертание текста */
+    }
+
+    .error-container a:hover {
+      text-decoration: underline; /* Подчеркивание при наведении */
+    }
+  </style>
+</head>
+<body>
+<div class="error-container">
+  <h1>404 - Страница не найдена</h1> <!-- Заголовок ошибки -->
+  <p>Извините, мы не нашли такую страницу. Вы можете вернуться на <a href="/">главную страницу</a>.</p> <!-- Текст ошибки с ссылкой на главную страницу -->
+</div>
+
+<script>
+  // Функция для получения данных о текущем пользователе
+  async function getUserData() {
+    const response = await fetch('/user'); // Отправляем запрос на сервер для получения данных о пользователе
+    const data = await response.json(); // Преобразуем ответ в формат JSON
+
+    const authBtn = document.getElementById('auth-btn'); // Получаем элемент кнопки авторизации
+    if (data.username) { // Если пользователь авторизован
+      // Меняем кнопку на никнейм и аватарку
+      authBtn.innerHTML = `
+          <img src="${data.avatar_url}" alt="Avatar" class="avatar">
+          ${data.username} (Выход)
+        `;
+      authBtn.href = '/logout'; // Меняем ссылку на выход
+    } else {
+      authBtn.textContent = 'Войти через GitHub'; // Если не авторизован
+      authBtn.href = '/auth/github'; // Ссылка на вход через GitHub
+    }
+  }
+
+  // Вызов функции при загрузке страницы
+  getUserData();
+</script>
+</body>
+</html>

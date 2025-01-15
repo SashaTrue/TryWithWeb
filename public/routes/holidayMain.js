@@ -1,22 +1,23 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const { Client } = require('pg');
-const router = express.Router();
+const express = require('express'); // Подключаем Express
+const fs = require('fs'); // Подключаем модуль для работы с файловой системой
+const path = require('path'); // Подключаем модуль для работы с путями
+const { Client } = require('pg'); // Подключаем клиент для работы с PostgreSQL
+const router = express.Router(); // Создаём новый роутер
 
-require('dotenv').config();
+require('dotenv').config(); // Подключаем переменные окружения из файла .env
 
 // Настройка подключения к базе данных PostgreSQL
 const client = new Client({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
+    user: process.env.DB_USER, // Имя пользователя
+    host: process.env.DB_HOST, // Хост базы данных
+    database: process.env.DB_NAME, // Имя базы данных
+    password: process.env.DB_PASSWORD, // Пароль пользователя
+    port: process.env.DB_PORT, // Порт для подключения
 });
 
-client.connect();
+client.connect(); // Устанавливаем соединение с базой данных
 
+// Маршрут для получения данных о празднике
 router.get('/', (req, res) => {
     const holidayId = req.query.id; // Получаем ID праздника из параметров запроса
 
@@ -35,7 +36,7 @@ router.get('/', (req, res) => {
         ORDER BY display_order;
     `;
 
-    // Выполнение запроса по получению данных праздника
+    // Выполнение запроса для получения данных праздника
     client.query(holidayQuery, [holidayId], (err, result) => {
         if (err) {
             console.error('Ошибка при запросе данных праздника:', err);
@@ -46,9 +47,9 @@ router.get('/', (req, res) => {
             return res.status(404).send('Праздник не найден');
         }
 
-        const holidayData = result.rows[0];
+        const holidayData = result.rows[0]; // Извлекаем данные о празднике из результата
 
-        // Выполнение запроса по получению изображений
+        // Выполнение запроса для получения изображений
         client.query(imagesQuery, [holidayId], (err, imagesResult) => {
             if (err) {
                 console.error('Ошибка при запросе данных изображений:', err);
@@ -78,18 +79,18 @@ router.get('/', (req, res) => {
                 pageContent = pageContent.replace('{{holidayDate}}', holidayData.celebration_date);
                 pageContent = pageContent.replace('{{holidayFact}}', holidayData.interesting_facts);
 
-                // Формируем HTML для слайдера
+                // Формируем HTML для слайдера изображений
                 let imageHTML = '';
                 images.forEach(imageUrl => {
                     imageHTML += `<img src="${imageUrl}" alt="Holiday Image">`;
                 });
                 pageContent = pageContent.replace('<div class="slider-images" id="sliderImages"></div>', `<div class="slider-images" id="sliderImages">${imageHTML}</div>`);
 
-                // Отправляем обновленную HTML-страницу
+                // Отправляем обновлённую HTML-страницу с данными о празднике и изображениями
                 res.send(pageContent);
             });
         });
     });
 });
 
-module.exports = router;
+module.exports = router; // Экспортируем роутер

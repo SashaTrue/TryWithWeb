@@ -1,64 +1,80 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+  <!-- Устанавливаем кодировку страницы и настройки для мобильных устройств -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Holy Days - главная</title>
+  <link rel="icon" href="./favicon.svg" type="image/x-icon">
+  <!-- Подключаем внешний файл стилей -->
   <link rel="stylesheet" href="./stylesheets/style.css">
 </head>
 <body>
+<!-- Навигационная панель с логотипом и кнопкой авторизации -->
 <nav class="navbar">
+  <!-- Логотип с названием проекта -->
   <a href="/" class="logo">
     <img src="./images/logo/SaintChel.png" alt="Holy Days Icon">
     <span>Holy Days</span>
   </a>
-  <!-- Кнопка входа через GitHub или кнопка с никнеймом -->
+  <!-- Кнопка для входа через GitHub или кнопка с никнеймом -->
   <a id="auth-btn" href="/auth/github" class="github-login-btn">Войти через GitHub</a>
 </nav>
 
+<!-- Блок навигационных ссылок -->
 <div class="nav-container">
   <div class="nav-links">
+    <!-- Ссылки для навигации по праздникам -->
     <a href="/holidays-by-date">По дате</a>
     <a href="/holidays-by-category">По категориям</a>
   </div>
 </div>
 
+<!-- Контейнер для отображения информации о праздниках -->
 <div id="holidays-container"></div>
 
 <script>
   // Функция для получения данных о текущем пользователе
   async function getUserData() {
+    // Запрос на сервер для получения данных о пользователе
     const response = await fetch('/user');
     const data = await response.json();
 
+    // Элемент кнопки авторизации
     const authBtn = document.getElementById('auth-btn');
     if (data.username) {
-      // Меняем кнопку на никнейм и аватарку
+      // Если пользователь авторизован, показываем его никнейм и аватарку
       authBtn.innerHTML = `
         <img src="${data.avatar_url}" alt="Avatar" class="avatar">
         ${data.username} (Выход)
       `;
-      authBtn.href = '/logout'; // Меняем ссылку на выход
+      // Ссылка на выход
+      authBtn.href = '/logout';
     } else {
-      authBtn.textContent = 'Войти через GitHub'; // Если не авторизован
-      authBtn.href = '/auth/github'; // Ссылка на вход
+      // Если пользователь не авторизован, отображаем кнопку для входа
+      authBtn.textContent = 'Войти через GitHub';
+      // Ссылка на страницу входа через GitHub
+      authBtn.href = '/auth/github';
     }
   }
 
-  // Вызов функции при загрузке страницы
+  // Вызов функции при загрузке страницы для получения данных о пользователе
   getUserData();
 
-  // Получение данных с сервера о праздниках
+  // Функция для получения данных о праздниках с сервера
   async function fetchHolidays() {
     const response = await fetch('/holidays');
     const html = await response.text();
+    // Отображаем полученные данные в контейнере
     document.getElementById('holidays-container').innerHTML = html;
   }
+  // Вызов функции для загрузки праздников
   fetchHolidays();
 
-  // Обработчик клика на мероприятие
+  // Обработчик клика на элемент с праздником
   function showHolidayDetails(holidayId) {
-    window.location.href = `/holiday-details?id=${holidayId}`; // Перенаправление на страницу с параметром ID
+    // Перенаправляем на страницу с деталями праздника по ID
+    window.location.href = `/holiday-details?id=${holidayId}`;
   }
 </script>
 </body>

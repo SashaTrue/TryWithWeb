@@ -1,103 +1,177 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <!-- Устанавливаем кодировку страницы и настройки для мобильных устройств -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Holy Days - главная</title>
   <link rel="icon" href="./favicon.svg" type="image/x-icon">
-  <!-- Подключаем внешний файл стилей -->
   <link rel="stylesheet" href="./stylesheets/style.css">
+  <style>
+    .admin-controls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 5px;
+      z-index: 100;
+    }
+
+    .category-item {
+      position: relative;
+      padding-top: 40px;  /* Добавляем отступ сверху для кнопок */
+    }
+
+    .admin-button {
+      padding: 5px 10px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .delete-button {
+      background: #e24a4a;
+    }
+
+    .add-holiday-button {
+      margin-left: 10px;
+    }
+
+    /* Предотвращаем всплытие события клика для кнопок */
+    .admin-controls button {
+      pointer-events: auto;
+    }
+  </style>
 </head>
 <body>
-<!-- Навигационная панель с логотипом и кнопкой авторизации -->
 <nav class="navbar">
-  <!-- Логотип с названием проекта -->
   <a href="/" class="logo">
     <img src="./images/logo/SaintChel.png" alt="Holy Days Icon">
     <span>Holy Days</span>
   </a>
-  <!-- Кнопка для входа через GitHub или кнопка с никнеймом -->
   <a id="auth-btn" href="/auth/github" class="github-login-btn">Войти через GitHub</a>
 </nav>
 
-<!-- Блок навигационных ссылок -->
 <div class="nav-container">
   <div class="nav-links">
-    <!-- Ссылки для навигации по праздникам -->
     <a href="/holidays-by-date">По дате</a>
     <a href="/holidays-by-category">По категориям</a>
   </div>
 </div>
 
-<!-- Контейнер для отображения информации о праздниках -->
 <div id="holidays-container"></div>
 
 <script>
-  // Функция для получения данных о текущем пользователе
-  async function getUserData() {
-    // Запрос на сервер для получения данных о пользователе
-    const response = await fetch('/user');
-    const data = await response.json();
+  let isAuthenticated = false;
 
-    // Элемент кнопки авторизации
-    const authBtn = document.getElementById('auth-btn');
-    if (data.username) {
-      // Если пользователь авторизован, показываем его никнейм и аватарку
-      authBtn.innerHTML = `
-        <img src="${data.avatar_url}" alt="Avatar" class="avatar">
-        ${data.username} (Выход)
-      `;
-      // Ссылка на выход
-      authBtn.href = '/logout';
-    } else {
-      // Если пользователь не авторизован, отображаем кнопку для входа
-      authBtn.textContent = 'Войти через GitHub';
-      // Ссылка на страницу входа через GitHub
-      authBtn.href = '/auth/github';
+  async function getUserData() {
+    try {
+      const response = await fetch('/user');
+      const data = await response.json();
+
+      const authBtn = document.getElementById('auth-btn');
+      if (data.username) {
+        isAuthenticated = true;
+        authBtn.innerHTML = `
+          <img src="${data.avatar_url}" alt="Avatar" class="avatar">
+          ${data.username} (Выход)
+        `;
+        authBtn.href = '/logout';
+      } else {
+        isAuthenticated = false;
+        authBtn.textContent = 'Войти через GitHub';
+        authBtn.href = '/auth/github';
+      }
+      // Перезагружаем праздники после проверки аутентификации
+      fetchHolidays(currentPage);
+    } catch (error) {
+      console.error('Ошибка при получении данных пользователя:', error);
+      isAuthenticated = false;
     }
   }
 
-  // Вызов функции при загрузке страницы для получения данных о пользователе
-  getUserData();
-
-  // Функция для получения данных о праздниках с сервера
   let currentPage = 1;
 
   async function fetchHolidays(page = 1) {
-    const response = await fetch(`/holidays?page=${page}&limit=10`);
-    const data = await response.json();
+    try {
+      const response = await fetch(`/holidays?page=${page}&limit=10`);
+      const data = await response.json();
 
-    const holidaysContainer = document.getElementById('holidays-container');
-    holidaysContainer.innerHTML = data.holidays.map(holiday => `
-        <div class="category-item" onclick="showHolidayDetails(${holiday.id})">
-            <h2>${holiday.title}</h2>
-            ${holiday.images.length > 0 ?
-            `<img class="category-image" src="${holiday.images[0]}" alt="${holiday.title}">` :
-            `<img class="category-image" src="./images/default-image.png" alt="${holiday.title}">`
+      const holidaysContainer = document.getElementById('holidays-container');
+
+      // Создаём HTML для каждого праздника
+      const holidaysHTML = data.holidays.map(holiday => `
+          <div class="category-item" data-id="${holiday.id}">
+              ${isAuthenticated ? `
+                  <div class="admin-controls">
+                      <button class="admin-button" onclick="event.stopPropagation(); editHoliday(${holiday.id})">Изменить</button>
+                      <button class="admin-button delete-button" onclick="event.stopPropagation(); deleteHoliday(${holiday.id})">Удалить</button>
+                  </div>
+              ` : ''}
+              <div onclick="showHolidayDetails(${holiday.id})">
+                  <h2>${holiday.title}</h2>
+                  ${holiday.images.length > 0 ?
+              `<img class="category-image" src="${holiday.images[0]}" alt="${holiday.title}">` :
+              `<img class="category-image" src="./images/default-image.png" alt="${holiday.title}">`
+      }
+              </div>
+          </div>
+      `).join('');
+
+      // Создаём HTML для пагинации
+      const paginationHTML = `
+          <div class="pagination">
+              ${page > 1 ? `<button onclick="fetchHolidays(${page - 1})">Предыдущая</button>` : ''}
+              ${page < data.pages ? `<button onclick="fetchHolidays(${page + 1})">Следующая</button>` : ''}
+              ${isAuthenticated ? `<button class="admin-button add-holiday-button" onclick="addNewHoliday()">Добавить праздник</button>` : ''}
+          </div>
+      `;
+
+      // Обновляем содержимое контейнера
+      holidaysContainer.innerHTML = holidaysHTML + paginationHTML;
+    } catch (error) {
+      console.error('Ошибка при загрузке праздников:', error);
     }
-        </div>
-    `).join('');
-
-    // Добавление кнопок пагинации
-    const pagination = `
-        <div class="pagination">
-            ${page > 1 ? `<button onclick="fetchHolidays(${page - 1})">Предыдущая</button>` : ''}
-            ${page < data.pages ? `<button onclick="fetchHolidays(${page + 1})">Следующая</button>` : ''}
-        </div>
-    `;
-    holidaysContainer.innerHTML += pagination;
   }
 
-  // Вызов функции для начальной загрузки
-  fetchHolidays();
-
-
-  // Обработчик клика на элемент с праздником
   function showHolidayDetails(holidayId) {
-    // Перенаправляем на страницу с деталями праздника по ID
     window.location.href = `/holiday-details?id=${holidayId}`;
   }
+
+  function editHoliday(holidayId) {
+    window.location.href = `/edit-holiday?id=${holidayId}`;
+  }
+
+  async function deleteHoliday(holidayId) {
+    if (confirm('Вы уверены, что хотите удалить этот праздник?')) {
+      try {
+        const response = await fetch(`/holidays/${holidayId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          // Перезагружаем текущую страницу после успешного удаления
+          fetchHolidays(currentPage);
+        } else {
+          alert('Ошибка при удалении праздника');
+        }
+      } catch (error) {
+        console.error('Ошибка:', error);
+        alert('Ошибка при удалении праздника');
+      }
+    }
+  }
+
+  function addNewHoliday() {
+    window.location.href = '/add-holiday';
+  }
+
+  // Вызываем getUserData() при загрузке страницы
+  getUserData();
 </script>
 </body>
 </html>

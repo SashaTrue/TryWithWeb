@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holy Days - Добавление праздника</title>
+    <link rel="icon" href="../favicon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="../stylesheets/style.css">
+    <style>
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-group textarea {
+            min-height: 100px;
+        }
+        .submit-btn {
+            background: #4a90e2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .submit-btn:hover {
+            background: #357abd;
+        }
+        .image-upload {
+            margin-top: 1rem;
+        }
+        .holiday-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+        }
+        @media screen and (max-width: 768px) {
+            .holiday-container {
+                flex-direction: column;
+            }
+            .image-slider,
+            .holiday-info {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <a href="/" class="logo">
+        <img src="../images/logo/SaintChel.png" alt="Holy Days Icon">
+        <span>Holy Days</span>
+    </a>
+    <a id="auth-btn" href="/auth/github" class="github-login-btn">Войти через GitHub</a>
+</nav>
+<div class="nav-container">
+    <div class="nav-links">
+        <a href="/holidays-by-date">По дате</a>
+        <a href="/holidays-by-category">По категориям</a>
+    </div>
+</div>
+<main class="holiday-container">
+    <h1>Добавление нового праздника</h1>
+
+    <form id="addHolidayForm" enctype="multipart/form-data" onsubmit="submitForm(event)">
+        <div class="form-group">
+            <label for="title">Название праздника:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="category">Категория:</label>
+            <input type="text" id="category" name="category" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Описание:</label>
+            <textarea id="description" name="description" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="traditions">Традиции:</label>
+            <textarea id="traditions" name="traditions"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="celebration_date">Дата празднования:</label>
+            <input type="date" id="celebration_date" name="celebration_date" required>
+        </div>
+        <div class="form-group">
+            <label for="interesting_facts">Интересные факты:</label>
+            <textarea id="interesting_facts" name="interesting_facts"></textarea>
+        </div>
+        <div class="form-group image-upload">
+            <label for="images">Загрузите изображения:</label>
+            <input type="file" id="images" name="images" multiple accept="image/*">
+        </div>
+        <button type="submit" class="submit-btn">Сохранить праздник</button>
+    </form>
+</main>
+<script>
+    async function submitForm(event) {
+        event.preventDefault();
+
+        const form = document.getElementById('addHolidayForm');
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('/add-holiday', {
+                method: 'POST',
+                body: formData
+            });
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success) {
+                    alert('Праздник успешно добавлен!');
+                    window.location.href = '/';
+                } else {
+                    alert(`Ошибка при сохранении: ${result.message}`);
+                }
+            } else {
+                const error = await response.json();
+                alert(`Ошибка при сохранении: ${error.message}`);
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Произошла ошибка при сохранении праздника');
+        }
+    }
+</script>
+</body>
+</html>

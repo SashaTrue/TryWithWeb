@@ -3,6 +3,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var http = require('http');
+var https = require('https');
+
+// Подключение библиотек для авторизации
+var passport = require('passport');
+var session = require('express-session');
+var GitHubStrategy = require('passport-github2').Strategy;
 
 // Подключение маршрутов
 var indexRouter = require('./public/routes/index');
@@ -10,20 +17,37 @@ var holidaysRouter = require('./public/routes/holidays');
 var holidayDetailsRouter = require('./public/routes/holidayMain');
 var holidayByDateRouter = require('./public/routes/holidaysByDate');
 var holidaysByCategoryRouter = require('./public/routes/holidaysByCategory');
+var addHolidayRouter = require('./public/routes/addHoliday');
+const {readFileSync} = require("node:fs");
 
 // Создание приложения Express
 var app = express();
 
-// Подключение библиотек для авторизации
-var passport = require('passport');
-var session = require('express-session');
-var GitHubStrategy = require('passport-github2').Strategy;
+// This line is from the Node.js HTTPS documentation.
+var options = {
+    key: readFileSync('./ssl/key.pem'),
+    cert: readFileSync('./ssl/cert.pem')
+};
+
+// Create an HTTP service.
+http.createServer(app).listen(23456);
+// Create an HTTPS service identical to the HTTP service.
+https.createServer(options, app).listen(12345);
+
+// Промежуточное ПО для перенаправления на HTTPS
+app.use((req, res, next) => {
+    if (req.protocol === 'http') {
+        return res.redirect(301, `https://${req.headers.host}${req.url}`);
+    }
+    next();
+});
+
 
 // Настройки с использованием вашего Client ID и Client Secret для GitHub
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID, // Используется переменная окружения для безопасного хранения данных
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: 'http://localhost:3000/auth/github/callback' // URL для перенаправления после успешной авторизации
+    callbackURL: 'https://localhost:12345/auth/github/callback' // URL для перенаправления после успешной авторизации
 }, function(accessToken, refreshToken, profile, done) {
     // Добавляем аватар пользователя в профиль
     profile.avatar_url = profile.photos[0].value;
@@ -95,6 +119,7 @@ app.use('/holidays', holidaysRouter);
 app.use('/holiday-details', holidayDetailsRouter);
 app.use('/holidays-by-date', holidayByDateRouter);
 app.use('/holidays-by-category', holidaysByCategoryRouter);
+app.use('/add-holiday', addHolidayRouter);
 
 // Маршрут для получения данных о текущем пользователе
 app.get('/user', function(req, res) {

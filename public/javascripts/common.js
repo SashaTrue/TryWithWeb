@@ -27,21 +27,11 @@ function showHolidayDetails(holidayId) {
 }
 
 // Функция для инициализации слайдера изображений
+// Функция для инициализации слайдера изображений
 function initializeSlider() {
     const sliderImages = document.getElementById('sliderImages'); // Находим контейнер с изображениями
     const images = sliderImages.querySelectorAll('img'); // Получаем все изображения
     let currentImage = 0; // Индекс текущего изображения
-
-    // Создаем и добавляем изображения в слайдер
-    images.forEach(image => {
-        const src = typeof image === 'object' ? image.url : image; // Определяем источник изображения
-        const img = document.createElement('img');
-        img.src = src; // Устанавливаем источник
-        img.alt = 'Holiday Image'; // Альтернативный текст для изображения
-        img.style.width = '100%'; // Задаем ширину изображения
-        img.style.flexShrink = '0'; // Не допускаем сжатия изображения
-        sliderImages.appendChild(img); // Добавляем изображение в контейнер
-    });
 
     // Настройка стилей контейнера слайдера
     sliderImages.style.display = 'flex';
@@ -63,7 +53,42 @@ function initializeSlider() {
         currentImage = (currentImage + 1) % images.length; // Переход к следующему изображению
         updateSlider(); // Обновляем слайдер
     });
+
+    // Изначально отобразим первое изображение
+    updateSlider();
 }
 
 // Инициализация слайдера при загрузке страницы
 document.addEventListener('DOMContentLoaded', initializeSlider);
+
+// Инициализация слайдера при загрузке страницы
+document.addEventListener('DOMContentLoaded', initializeSlider);
+
+async function submitForm(event) {
+    event.preventDefault();
+
+    const form = document.getElementById('addHolidayForm');
+    const formData = new FormData(form);
+
+    try {
+        const response = await fetch('/add-holiday', {
+            method: 'POST',
+            body: formData
+        });
+        if (response.ok) {
+            const result = await response.json();
+            if (result.success) {
+                alert('Праздник успешно добавлен!');
+                window.location.href = '/';
+            } else {
+                alert(`Ошибка при сохранении: ${result.message}`);
+            }
+        } else {
+            const error = await response.json();
+            alert(`Ошибка при сохранении: ${error.message}`);
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка при сохранении праздника');
+    }
+}

@@ -97,37 +97,38 @@
     try {
       const response = await fetch(`/holidays?page=${page}&limit=10`);
       const data = await response.json();
-
       const holidaysContainer = document.getElementById('holidays-container');
-
       // Создаём HTML для каждого праздника
+
+      console.log('Запрашиваемая страница:', page);
+
+      console.log('Полученные данные с сервера:', data);
+
       const holidaysHTML = data.holidays.map(holiday => `
-          <div class="category-item" data-id="${holiday.id}">
-              ${isAuthenticated ? `
-                  <div class="admin-controls">
-                      <button class="admin-button" onclick="event.stopPropagation(); editHoliday(${holiday.id})">Изменить</button>
-                      <button class="admin-button delete-button" onclick="event.stopPropagation(); deleteHoliday(${holiday.id})">Удалить</button>
-                  </div>
-              ` : ''}
-              <div onclick="showHolidayDetails(${holiday.id})">
-                  <h2>${holiday.title}</h2>
-                  ${holiday.images.length > 0 ?
+            <div class="category-item" data-id="${holiday.id}">
+                ${isAuthenticated ? `
+                    <div class="admin-controls">
+                        <button class="admin-button" onclick="event.stopPropagation(); editHoliday(${holiday.id})">Изменить</button>
+                        <button class="admin-button delete-button" onclick="event.stopPropagation(); deleteHoliday(${holiday.id})">Удалить</button>
+                    </div>
+                ` : ''}
+                <div onclick="showHolidayDetails(${holiday.id})">
+                    <h2>${holiday.title}</h2>
+                    ${holiday.images.length > 0 ?
               `<img class="category-image" src="${holiday.images[0]}" alt="${holiday.title}">` :
               `<img class="category-image" src="./images/default-image.png" alt="${holiday.title}">`
       }
-              </div>
-          </div>
-      `).join('');
-
+                </div>
+            </div>
+        `).join('');
       // Создаём HTML для пагинации
       const paginationHTML = `
-          <div class="pagination">
-              ${page > 1 ? `<button onclick="fetchHolidays(${page - 1})">Предыдущая</button>` : ''}
-              ${page < data.pages ? `<button onclick="fetchHolidays(${page + 1})">Следующая</button>` : ''}
-              ${isAuthenticated ? `<button class="admin-button add-holiday-button" onclick="addNewHoliday()">Добавить праздник</button>` : ''}
-          </div>
-      `;
-
+            <div class="pagination">
+                ${page > 1 ? `<button onclick="fetchHolidays(${page - 1})">Предыдущая</button>` : ''}
+                ${page < data.pages ? `<button onclick="fetchHolidays(${page + 1})">Следующая</button>` : ''}
+                ${isAuthenticated ? `<button class="admin-button add-holiday-button" onclick="addNewHoliday()">Добавить праздник</button>` : ''}
+            </div>
+        `;
       // Обновляем содержимое контейнера
       holidaysContainer.innerHTML = holidaysHTML + paginationHTML;
     } catch (error) {
@@ -172,6 +173,28 @@
 
   // Вызываем getUserData() при загрузке страницы
   getUserData();
+
+  async function deleteHoliday(holidayId) {
+    if (confirm('Вы уверены, что хотите удалить этот праздник?')) {
+      try {
+        const response = await fetch(`/holidays/${holidayId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        if (response.ok) {
+          // Перезагружаем текущую страницу после успешного удаления
+          fetchHolidays(currentPage);
+        } else {
+          alert('Ошибка при удалении праздника');
+        }
+      } catch (error) {
+        console.error('Ошибка:', error);
+        alert('Ошибка при удалении праздника');
+      }
+    }
+  }
 </script>
 </body>
 </html>

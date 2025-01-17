@@ -1,10 +1,12 @@
+//ssh -R 80:localhost:8000 serveo.net                                                                                        ✔
+
 // Подключение необходимых модулей
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var http = require('http');
-var https = require('https');
+var multer = require('multer'); // Добавляем multer
 
 // Подключение библиотек для авторизации
 var passport = require('passport');
@@ -18,36 +20,29 @@ var holidayDetailsRouter = require('./public/routes/holidayMain');
 var holidayByDateRouter = require('./public/routes/holidaysByDate');
 var holidaysByCategoryRouter = require('./public/routes/holidaysByCategory');
 var addHolidayRouter = require('./public/routes/addHoliday');
-const {readFileSync} = require("node:fs");
 
 // Создание приложения Express
 var app = express();
 
-// This line is from the Node.js HTTPS documentation.
-var options = {
-    key: readFileSync('./ssl/key.pem'),
-    cert: readFileSync('./ssl/cert.pem')
-};
+// Настройка multer для загрузки файлов
+const upload = multer({ dest: 'uploads/' });
 
-// Create an HTTP service.
-http.createServer(app).listen(23456);
-// Create an HTTPS service identical to the HTTP service.
-https.createServer(options, app).listen(12345);
+// Создание HTTP сервиса
+http.createServer(app).listen(8000);
 
-// Промежуточное ПО для перенаправления на HTTPS
+// Логирование для отладки
 app.use((req, res, next) => {
-    if (req.protocol === 'http') {
-        return res.redirect(301, `https://${req.headers.host}${req.url}`);
-    }
+    console.log('Session ID:', req.sessionID);
+    console.log('Session:', req.session);
     next();
 });
-
 
 // Настройки с использованием вашего Client ID и Client Secret для GitHub
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID, // Используется переменная окружения для безопасного хранения данных
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: 'https://localhost:12345/auth/github/callback' // URL для перенаправления после успешной авторизации
+    callbackURL: 'https://04bdca40ef26561c4869d69e8e2a60e2.serveo.net/auth/github/callback' // URL для перенаправления после успешной авторизации
+    //callbackURL: 'http://localhost:8000/auth/github/callback' // URL для перенаправления после успешной авторизации
 }, function(accessToken, refreshToken, profile, done) {
     // Добавляем аватар пользователя в профиль
     profile.avatar_url = profile.photos[0].value;
@@ -112,6 +107,19 @@ app.use(express.json()); // Для обработки JSON тела запрос
 app.use(express.urlencoded({ extended: false })); // Для обработки URL-кодированных данных
 app.use(cookieParser()); // Для парсинга cookie
 app.use(express.static(path.join(__dirname, 'public'))); // Статические файлы
+
+// Роут для загрузки фотографии
+app.post('/upload-photo', upload.single('photo'), function(req, res) {
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+    }
+
+    // Здесь можно добавить логику для обработки файла, например, перемещение его в другое место или изменение имени
+    const filePath = path.join(__dirname, 'uploads', req.file.filename);
+    console.log(`File uploaded to ${filePath}`);
+
+    res.send('File uploaded successfully!');
+});
 
 // Подключение маршрутов
 app.use('/', indexRouter);

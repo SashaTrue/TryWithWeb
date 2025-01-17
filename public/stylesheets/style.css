@@ -1,20 +1,20 @@
 * {
-    margin: 0; /* Убирает отступы у всех элементов */
-    padding: 0; /* Убирает внутренние отступы у всех элементов */
-    box-sizing: border-box; /* Устанавливает расчет ширины и высоты с учетом отступов и границ */
-    font-family: Arial, sans-serif; /* Устанавливает шрифт по умолчанию */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
 #holidays-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px; /* Расстояние между элементами */
-    justify-content: center; /* Центрирование элементов */
+    gap: 20px;
+    justify-content: center;
     padding: 20px;
 }
 
 .category-item {
-    flex: 1 1 calc(33.333% - 20px); /* Устанавливаем ширину одной трети контейнера */
+    flex: 1 1 calc(33.333% - 20px);
     box-sizing: border-box;
     margin: 10px;
     padding: 15px;
@@ -40,207 +40,204 @@
 
 .pagination button {
     padding: 10px 20px;
-    background-color: #ffd700; /* Зеленый цвет, чтобы соответствовать теме */
-    color: white; /* Белый текст */
-    border: 2px solid #ffd700; /* Рамка того же цвета, что и фон */
-    border-radius: 25px; /* Закругленные края */
-    font-size: 16px; /* Увеличенный размер текста */
-    font-weight: bold; /* Жирный текст */
-    cursor: pointer; /* Указатель мыши */
-    transition: all 0.3s ease; /* Плавные изменения при наведении */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Легкая тень */
+    background-color: #ffd700;
+    color: white;
+    border: 2px solid #ffd700;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .pagination button:hover {
-    background-color: white; /* Белый фон при наведении */
-    color: #ffd700; /* Зеленый текст при наведении */
-    border: 2px solid #ffd700; /* Подчеркнутый эффект рамки */
+    background-color: white;
+    color: #ffd700;
+    border: 2px solid #ffd700;
 }
 
 .pagination button:active {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Уменьшенная тень при нажатии */
-    transform: translateY(2px); /* Эффект нажатия */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transform: translateY(2px);
 }
 
-
-
 .navbar .logo {
-    text-decoration: none; /* Убирает подчеркивание у логотипа */
+    text-decoration: none;
 }
 
 .navbar .logo span {
-    color: WHITE; /* Устанавливает белый цвет для текста логотипа */
+    color: WHITE;
 }
 
 .navbar .logo:active, .navbar .logo:focus {
-    color: WHITE; /* Оставляет белый цвет текста при нажатии или фокусе */
-    text-decoration: none; /* Убирает подчеркивание при фокусе или нажатии */
+    color: WHITE;
+    text-decoration: none;
 }
 
 .github-login-btn {
-    background-color: #333; /* Темный фон для кнопки GitHub */
-    color: white; /* Белый цвет текста */
-    padding: 10px 20px; /* Отступы внутри кнопки */
-    text-decoration: none; /* Убирает подчеркивание */
-    border-radius: 5px; /* Скругленные углы */
-    font-size: 16px; /* Размер шрифта */
-    display: inline-block; /* Инлайн-блок для выравнивания */
-    margin-left: auto; /* Автоматический отступ слева */
-    margin-right: 10px; /* Отступ справа */
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: 10px;
 }
 
 .github-login-btn:hover {
-    background-color: #444; /* Изменяет фон при наведении */
+    background-color: #444;
 }
 
 .user-btn {
-    background-color: #333; /* Темный фон для кнопки пользователя */
-    color: white; /* Белый цвет текста */
-    padding: 10px 20px; /* Отступы внутри кнопки */
-    text-decoration: none; /* Убирает подчеркивание */
-    border-radius: 5px; /* Скругленные углы */
-    font-size: 16px; /* Размер шрифта */
-    display: inline-block; /* Инлайн-блок для выравнивания */
-    margin-left: auto; /* Автоматический отступ слева */
-    margin-right: 10px; /* Отступ справа */
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: 10px;
 }
 
 .user-btn:hover {
-    background-color: #444; /* Изменяет фон при наведении */
+    background-color: #444;
 }
 
 .avatar {
-    width: 30px; /* Устанавливает ширину аватара */
-    height: 30px; /* Устанавливает высоту аватара */
-    border-radius: 50%; /* Скругляет аватар в круг */
-    margin-right: 10px; /* Отступ справа */
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
 body {
-    background-color: #f5f5f5; /* Светлый фон для всей страницы */
+    background-color: #f5f5f5;
 }
 
 .navbar {
-    background-color: #333; /* Темный фон для навигационной панели */
-    color: white; /* Белый цвет текста */
-    padding: 15px 0; /* Отступы сверху и снизу */
-    display: flex; /* Использует Flexbox для выравнивания элементов */
-    align-items: center; /* Выравнивает элементы по центру */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Тень для панели */
+    background-color: #333;
+    color: white;
+    padding: 15px 0;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .logo {
-    display: flex; /* Использует Flexbox для выравнивания элементов внутри логотипа */
-    align-items: center; /* Выравнивает элементы по центру */
-    padding: 0 40px; /* Отступы слева и справа */
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
 }
 
 .logo img {
-    width: 40px; /* Устанавливает ширину изображения логотипа */
-    height: 40px; /* Устанавливает высоту изображения логотипа */
-    margin-right: 15px; /* Отступ справа от изображения */
-    border-radius: 50%; /* Скругляет изображение в круг */
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+    border-radius: 50%;
 }
 
 .logo span {
-    font-size: 1.5rem; /* Размер шрифта для текста логотипа */
-    font-weight: bold; /* Жирное начертание шрифта */
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
 .nav-container {
-    position: relative; /* Относительное позиционирование контейнера навигации */
-    width: 100%; /* Ширина на 100% */
-    background-color: #ffd700; /* Золотистый фон */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Легкая тень */
+    position: relative;
+    width: 100%;
+    background-color: #ffd700;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .nav-links {
-    display: flex; /* Использует Flexbox для выравнивания ссылок */
-    justify-content: center; /* Выравнивает ссылки по центру */
-    align-items: center; /* Выравнивает элементы по центру */
-    padding: 15px 0; /* Отступы сверху и снизу */
-    max-width: 1200px; /* Максимальная ширина */
-    margin: 0 auto; /* Выравнивает контейнер по центру */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .nav-links a {
-    color: #333; /* Темный цвет текста ссылок */
-    text-decoration: none; /* Убирает подчеркивание */
-    padding: 8px 30px; /* Отступы внутри ссылок */
-    margin: 0 10px; /* Отступы слева и справа */
-    border-radius: 20px; /* Скругленные углы */
-    transition: background-color 0.3s; /* Плавный переход фона */
-    font-weight: bold; /* Жирное начертание шрифта */
+    color: #333;
+    text-decoration: none;
+    padding: 8px 30px;
+    margin: 0 10px;
+    border-radius: 20px;
+    transition: background-color 0.3s;
+    font-weight: bold;
 }
 
 .nav-links a:hover {
-    background-color: rgba(0,0,0,0.1); /* Фон при наведении */
+    background-color: rgba(0,0,0,0.1);
 }
 
 .search-icon {
-    position: absolute; /* Абсолютное позиционирование иконки поиска */
-    right: 40px; /* Отступ справа */
-    top: 50%; /* Центр по вертикали */
-    transform: translateY(-50%); /* Центрирование по вертикали */
-    font-size: 1.5rem; /* Размер шрифта */
-    cursor: pointer; /* Курсор в виде руки при наведении */
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    cursor: pointer;
 }
 
 .categories {
-    max-width: 1200px; /* Максимальная ширина */
-    margin: 0 auto; /* Центрирование */
-    padding: 40px 20px; /* Отступы */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
 }
 
 .category-title {
-    font-size: 2.5rem; /* Размер шрифта заголовка категории */
-    margin-bottom: 40px; /* Отступ снизу */
-    text-align: center; /* Выравнивание по центру */
-    color: #333; /* Темный цвет текста */
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    text-align: center;
+    color: #333;
 }
 
 .category-grid {
-    display: grid; /* Использование сетки */
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Автоматическая настройка колонок */
-    gap: 30px; /* Отступы между элементами */
-    justify-items: center; /* Центрирование элементов по горизонтали */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    justify-items: center;
 }
 
 .category-item {
-    background: white; /* Белый фон для элемента категории */
-    border-radius: 15px; /* Скругленные углы */
-    padding: 20px; /* Отступы внутри элемента */
-    width: 100%; /* Ширина 100% */
-    max-width: 350px; /* Максимальная ширина */
-    transition: transform 0.3s, box-shadow 0.3s; /* Плавный переход для трансформации и тени */
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Тень для элемента */
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    width: 100%;
+    max-width: 350px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .category-item:hover {
-    transform: translateY(-5px); /* Легкое поднятие при наведении */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Увеличенная тень при наведении */
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .category-item h2 {
-    margin-bottom: 20px; /* Отступ снизу */
-    font-size: 1.4rem; /* Размер шрифта */
-    color: #333; /* Темный цвет текста */
-    text-align: center; /* Выравнивание по центру */
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    color: #333;
+    text-align: center;
 }
 
 .category-image {
-    width: 100%; /* Ширина изображения */
-    height: 200px; /* Высота изображения */
-    object-fit: cover; /* Объект обрезается по размеру контейнера */
-    border-radius: 10px; /* Скругленные углы */
-    transition: transform 0.3s; /* Плавный переход для трансформации */
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s;
 }
 
 .category-image:hover {
-    transform: scale(1.02); /* Легкое увеличение при наведении */
+    transform: scale(1.02);
 }
 
-/* Дополнительные стили для holiday секции */
 .holiday-container {
     max-width: 1200px;
     margin: 40px auto;
@@ -343,4 +340,15 @@ body {
 .info-item h3 {
     margin-bottom: 10px;
     color: #333;
+}
+
+/* Добавление медиа-запросов для адаптивности */
+@media (max-width: 768px) {
+    .holiday-container {
+        grid-template-columns: 1fr;
+    }
+
+    .image-slider {
+        margin-bottom: 20px;
+    }
 }

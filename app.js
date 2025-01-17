@@ -20,6 +20,7 @@ var holidayDetailsRouter = require('./public/routes/holidayMain');
 var holidayByDateRouter = require('./public/routes/holidaysByDate');
 var holidaysByCategoryRouter = require('./public/routes/holidaysByCategory');
 var addHolidayRouter = require('./public/routes/addHoliday');
+var editHolidayRouter = require('./public/routes/editHoliday');
 
 // Создание приложения Express
 var app = express();
@@ -41,7 +42,7 @@ app.use((req, res, next) => {
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID, // Используется переменная окружения для безопасного хранения данных
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: 'https://04bdca40ef26561c4869d69e8e2a60e2.serveo.net/auth/github/callback' // URL для перенаправления после успешной авторизации
+    callbackURL: 'https://e8037655742534ff7e508c929f343adc.serveo.net/auth/github/callback' // URL для перенаправления после успешной авторизации
     //callbackURL: 'http://localhost:8000/auth/github/callback' // URL для перенаправления после успешной авторизации
 }, function(accessToken, refreshToken, profile, done) {
     // Добавляем аватар пользователя в профиль
@@ -128,6 +129,7 @@ app.use('/holiday-details', holidayDetailsRouter);
 app.use('/holidays-by-date', holidayByDateRouter);
 app.use('/holidays-by-category', holidaysByCategoryRouter);
 app.use('/add-holiday', addHolidayRouter);
+app.use('/edit-holiday', editHolidayRouter);
 
 // Маршрут для получения данных о текущем пользователе
 app.get('/user', function(req, res) {

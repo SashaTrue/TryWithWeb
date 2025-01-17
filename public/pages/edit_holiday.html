@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование праздника</title>
+    <link rel="icon" href="../favicon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="../stylesheets/style.css">
+    <style>
+        .holiday-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .image-slider {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #ddd;
+            padding: 20px;
+        }
+
+        .holiday-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border: 2px dashed #ddd;
+            padding: 20px;
+        }
+
+        .holiday-info label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .holiday-info input,
+        .holiday-info textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            border: 2px dashed #ddd;
+            padding: 20px;
+        }
+
+        .info-item label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .info-item input,
+        .info-item textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .submit-btn {
+            background: #4a90e2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-btn:hover {
+            background: #357abd;
+        }
+    </style>
+</head>
+
+<nav class="navbar">
+    <a href="/" class="logo">
+        <img src="../images/logo/SaintChel.png" alt="Holy Days Icon">
+        <span>Holy Days</span>
+    </a>
+    <a id="auth-btn" href="/auth/github" class="github-login-btn">Войти через GitHub</a>
+</nav>
+<div class="nav-container">
+    <div class="nav-links">
+        <a href="/holidays-by-date">По дате</a>
+        <a href="/holidays-by-category">По категориям</a>
+    </div>
+</div>
+
+<body>
+
+<main class="holiday-container">
+    <form id="addHolidayForm" enctype="multipart/form-data" onsubmit="submitForm(event)">
+        <div class="image-slider">
+            <label for="images">Загрузите изображения:</label>
+            <input type="file" id="images" name="images" multiple accept="image/*">
+            <div id="uploaded-images"></div> <!-- Место для отображения загруженных изображений -->
+        </div>
+        <div class="holiday-info">
+            <label for="title">Название праздника:</label>
+            <input type="text" id="title" name="title" required>
+            <label for="category">Категория:</label>
+            <input type="text" id="category" name="category" required>
+            <label for="description">Описание:</label>
+            <textarea id="description" name="description" required></textarea>
+        </div>
+        <div class="additional-info">
+            <h2>Дополнительная информация</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label for="traditions">Традиции:</label>
+                    <textarea id="traditions" name="traditions"></textarea>
+                </div>
+                <div class="info-item">
+                    <label for="celebration_date">Дата празднования:</label>
+                    <input type="date" id="celebration_date" name="celebration_date" required>
+                </div>
+                <div class="info-item">
+                    <label for="interesting_facts">Интересные факты:</label>
+                    <textarea id="interesting_facts" name="interesting_facts"></textarea>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="submit-btn">Сохранить праздник</button>
+    </form>
+</main>
+
+</body>
+</html>
